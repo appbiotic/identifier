@@ -5,7 +5,15 @@ pub trait IdentifierGenerator {
 }
 
 #[cfg(feature = "uuid")]
-pub struct UuidIdentifierGenerator;
+pub struct UuidIdentifierGenerator {
+    _version: u8,
+}
+
+impl Default for UuidIdentifierGenerator {
+    fn default() -> Self {
+        Self { _version: 7 }
+    }
+}
 
 #[cfg(feature = "uuid")]
 impl IdentifierGenerator for UuidIdentifierGenerator {
@@ -48,7 +56,7 @@ mod test {
 
     #[test]
     fn uuid_generator_works() {
-        let generator = UuidIdentifierGenerator;
+        let generator = UuidIdentifierGenerator::default();
         let id = generator.generate_identifier().unwrap();
         assert_eq!(id.chars().filter(|x| x.eq(&'-')).count(), 4);
         assert_eq!(id.len(), 36);
